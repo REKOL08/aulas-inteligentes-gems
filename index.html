@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aulas Inteligentes · Gems de Gemini · Areandina</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -31,7 +32,6 @@
     overflow-x: hidden;
   }
 
-  /* ── GRID BACKGROUND ── */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -43,7 +43,6 @@
     z-index: 0;
   }
 
-  /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0;
     z-index: 100;
@@ -68,10 +67,8 @@
     cursor: pointer; font-family: 'DM Sans', sans-serif;
   }
 
-  /* ── SLIDES WRAPPER ── */
   .slides { position: relative; z-index: 1; }
 
-  /* ── SECTION BASE ── */
   section {
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
@@ -81,7 +78,6 @@
 
   .container { max-width: 1100px; width: 100%; margin: 0 auto; }
 
-  /* ── HERO ── */
   #hero { text-align: center; }
   .event-tag {
     display: inline-flex; align-items: center; gap: 0.5rem;
@@ -157,7 +153,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── WHAT IS A GEM ── */
   #que-es { background: var(--surface); }
   .section-label {
     font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
@@ -200,7 +195,6 @@
   .anatomy-text h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.2rem; }
   .anatomy-text p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
 
-  /* ── PASOS ── */
   #pasos { }
   .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
   .step-card {
@@ -222,7 +216,46 @@
     padding: 0.5rem 0.75rem; border-radius: 0 6px 6px 0; font-size: 0.78rem; color: var(--gem);
   }
 
-  /* ── FACULTADES / VOTACION ── */
+  /* ── QR BLOCK ── */
+  .step-qr {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0.75rem;
+    background: rgba(79,142,247,0.05);
+    border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 12px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .qr-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gem3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+  .step-qr canvas,
+  .step-qr img {
+    border-radius: 8px;
+    border: 3px solid white;
+    display: block;
+  }
+  .qr-url {
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+  }
+  /* highlight the step-02 card */
+  .step-card.step-featured {
+    border-color: rgba(79,142,247,0.4);
+    background: linear-gradient(145deg, var(--surface), rgba(79,142,247,0.04));
+  }
+
   #facultades { background: var(--surface); }
   .vote-intro {
     text-align: center; margin-bottom: 3rem;
@@ -280,7 +313,6 @@
   .vote-result.show { display: block; }
   .vote-winner { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--gem3); }
 
-  /* ── GEM DETAIL (expandible) ── */
   #gem-detail { min-height: auto; padding: 2rem; display: none; }
   #gem-detail.show { display: flex; }
   .gem-detail-card {
@@ -311,7 +343,6 @@
   }
   .copy-btn:hover { background: rgba(79,142,247,0.2); }
 
-  /* ── GUIA RAPIDA ── */
   #guia { }
   .guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
   .guide-card {
@@ -324,7 +355,6 @@
   .guide-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
   .guide-text { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
 
-  /* ── FOOTER ── */
   footer {
     background: var(--surface); border-top: 1px solid var(--border);
     padding: 2rem 2.5rem; text-align: center;
@@ -333,21 +363,18 @@
   footer a { color: var(--gem); text-decoration: none; }
   footer strong { color: var(--text); }
 
-  /* ── PROGRESS BAR ── */
   .progress-bar {
     position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
     background: linear-gradient(90deg, var(--gem), var(--gem3));
     transition: width 0.2s;
   }
 
-  /* ── SECTION DIVIDER ── */
   .divider {
     width: 60px; height: 3px; border-radius: 2px;
     background: linear-gradient(90deg, var(--gem), var(--gem2));
     margin: 1rem 0 2rem;
   }
 
-  /* ── TABS ── */
   .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
   .tab-btn {
     background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
@@ -356,7 +383,6 @@
   }
   .tab-btn.active { background: rgba(79,142,247,0.1); border-color: var(--gem); color: var(--gem); }
 
-  /* ── HIGHLIGHT BOX ── */
   .highlight-box {
     background: rgba(0,229,195,0.05); border: 1px solid rgba(0,229,195,0.2);
     border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1.5rem;
@@ -364,10 +390,8 @@
   .highlight-box p { font-size: 0.88rem; color: var(--gem3); line-height: 1.6; }
   .highlight-box strong { color: var(--text); }
 
-  /* ── SMOOTH SCROLL ── */
   html { scroll-behavior: smooth; }
 
-  /* ── RESPONSIVE NAV ── */
   @media(max-width:600px) {
     nav { padding: 0.75rem 1.25rem; }
     .nav-links { display: none; }
@@ -389,7 +413,7 @@
   <button class="nav-pill" onclick="scrollToVote()">🗳️ Votar ahora</button>
 </nav>
 
-<!-- ══════════════ HERO ══════════════ -->
+<!-- HERO -->
 <section id="hero">
   <div class="container">
     <div class="event-tag">Evento Areandina · Mayo 2026</div>
@@ -413,7 +437,7 @@
   </div>
 </section>
 
-<!-- ══════════════ QUÉ ES UN GEM ══════════════ -->
+<!-- QUÉ ES UN GEM -->
 <section id="que-es">
   <div class="container">
     <div class="two-col">
@@ -473,13 +497,14 @@
   </div>
 </section>
 
-<!-- ══════════════ PASOS ══════════════ -->
+<!-- PASOS -->
 <section id="pasos">
   <div class="container">
     <div class="section-label">Tutorial</div>
     <h2 class="section-title">Cómo crear<br>tu Gem paso a paso</h2>
     <div class="divider"></div>
     <div class="steps-grid">
+
       <div class="step-card">
         <div class="step-num">01</div>
         <div class="step-icon">🌐</div>
@@ -487,13 +512,21 @@
         <div class="step-desc">Accede a <strong>gemini.google.com</strong> con tu cuenta institucional o personal de Google.</div>
         <div class="step-tip">Asegúrate de estar en la cuenta correcta</div>
       </div>
-      <div class="step-card">
+
+      <!-- PASO 02: QR integrado -->
+      <div class="step-card step-featured">
         <div class="step-num">02</div>
         <div class="step-icon">💎</div>
         <div class="step-title">Crear Gem</div>
         <div class="step-desc">En el menú lateral, busca <strong>"Mis Gems"</strong> y haz clic en <strong>"+ Nuevo Gem"</strong>.</div>
-        <div class="step-tip">gemini.google.com/gems/create</div>
+        <div class="step-tip">📱 Escanea el QR para ir directo</div>
+        <div class="step-qr">
+          <div class="qr-label">📱 Escanea y abre Gems</div>
+          <div id="qrCode"></div>
+          <div class="qr-url">gemini.google.com/gems/create</div>
+        </div>
       </div>
+
       <div class="step-card">
         <div class="step-num">03</div>
         <div class="step-icon">✏️</div>
@@ -501,6 +534,7 @@
         <div class="step-desc">Dale un nombre memorable y una descripción breve que explique para qué sirve tu asistente.</div>
         <div class="step-tip">Sé específico: "Asesor de Casos Clínicos Odontología"</div>
       </div>
+
       <div class="step-card">
         <div class="step-num">04</div>
         <div class="step-icon">📋</div>
@@ -508,6 +542,7 @@
         <div class="step-desc">Define el rol, el tono, las restricciones y el tipo de respuestas que debe dar tu Gem.</div>
         <div class="step-tip">Empieza con: "Eres un asistente especializado en..."</div>
       </div>
+
       <div class="step-card">
         <div class="step-num">05</div>
         <div class="step-icon">📁</div>
@@ -515,6 +550,7 @@
         <div class="step-desc">Carga PDFs, guías, rúbricas, normas o cualquier documento que quieras que el Gem conozca.</div>
         <div class="step-tip">Hasta 10 archivos · Hasta 1M tokens de contexto</div>
       </div>
+
       <div class="step-card">
         <div class="step-num">06</div>
         <div class="step-icon">🧪</div>
@@ -522,11 +558,12 @@
         <div class="step-desc">Usa el panel de <strong>Vista previa</strong> para probarlo antes de guardarlo. Ajusta hasta que responda bien.</div>
         <div class="step-tip">Haz al menos 3 preguntas de prueba</div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ══════════════ FACULTADES / VOTACIÓN ══════════════ -->
+<!-- FACULTADES / VOTACIÓN -->
 <section id="facultades">
   <div class="container">
     <div class="vote-intro">
@@ -538,9 +575,7 @@
       </p>
     </div>
 
-    <div class="fac-grid" id="facGrid">
-      <!-- Cards generadas por JS -->
-    </div>
+    <div class="fac-grid" id="facGrid"></div>
 
     <div class="vote-actions">
       <button class="btn-primary" onclick="showWinner()">Ver Gem más votado ✨</button>
@@ -555,16 +590,14 @@
   </div>
 </section>
 
-<!-- ══════════════ GEM DETAIL ══════════════ -->
+<!-- GEM DETAIL -->
 <section id="gem-detail">
   <div class="container">
-    <div class="gem-detail-card" id="gemDetailCard">
-      <!-- Contenido dinámico -->
-    </div>
+    <div class="gem-detail-card" id="gemDetailCard"></div>
   </div>
 </section>
 
-<!-- ══════════════ GUÍA RÁPIDA ══════════════ -->
+<!-- GUÍA RÁPIDA -->
 <section id="guia">
   <div class="container">
     <div class="section-label">Para llevarte a casa</div>
@@ -619,14 +652,25 @@
   </div>
 </section>
 
-<!-- ══════════════ FOOTER ══════════════ -->
 <footer>
   <p><strong>Aulas Inteligentes · Creación de Gems con Gemini</strong> · Areandina Pereira 2026</p>
   <p style="margin-top:0.4rem;">Presentación disponible en <a href="#" id="githubLink">GitHub · REKOL08</a> · Contacto: <a href="mailto:alabrada3@areandina.edu.co">alabrada3@areandina.edu.co</a></p>
 </footer>
 
-<!-- ══════════════ JAVASCRIPT ══════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+// ─── GENERAR QR ───
+window.addEventListener('load', function() {
+  new QRCode(document.getElementById("qrCode"), {
+    text: "https://gemini.google.com/gems/create",
+    width: 140,
+    height: 140,
+    colorDark: "#0a0e1a",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+});
+
 // ─── DATOS DE LAS 8 FACULTADES ───
 const facultades = [
   {
@@ -866,7 +910,7 @@ RESTRICCIONES:
   }
 ];
 
-// ─── RENDERIZAR CARDS DE FACULTADES ───
+// ─── RENDERIZAR CARDS ───
 const grid = document.getElementById('facGrid');
 const votes = {};
 
@@ -893,7 +937,6 @@ function vote(id) {
   const vc = document.getElementById('vc-' + id);
   card.classList.add('has-votes');
   vc.textContent = votes[id];
-  // highlight selected
   document.querySelectorAll('.fac-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
 }
@@ -904,7 +947,6 @@ function showWinner() {
   for (const [id, count] of Object.entries(votes)) {
     if (count > maxVotes) { maxVotes = count; winnerId = id; }
   }
-  // si no hay votos, usa el primero como demo
   const winner = facultades.find(f => f.id === winnerId);
   document.getElementById('winnerName').textContent = `${winner.emoji} ${winner.gemName} — ${winner.facultad}`;
   document.getElementById('winnerDesc').textContent = winner.desc;
@@ -967,7 +1009,6 @@ function scrollToDetail() {
   document.getElementById('gem-detail').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ─── PROGRESS BAR ───
 window.addEventListener('scroll', () => {
   const scrollTop = window.scrollY;
   const docHeight = document.body.scrollHeight - window.innerHeight;
