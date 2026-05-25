@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aulas Inteligentes · Gems de Gemini · Areandina</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --gem: #4f8ef7;
+    --gem2: #7c5cfc;
+    --gem3: #00e5c3;
+    --accent: #f7c948;
+    --danger: #ff6b6b;
+    --text: #e8edf7;
+    --muted: #7a8aaa;
+    --border: rgba(79,142,247,0.15);
+    --glow: 0 0 40px rgba(79,142,247,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(79,142,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,142,247,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(10,14,26,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--gem); }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-pill {
+    background: linear-gradient(135deg, var(--gem), var(--gem2));
+    color: white; border: none; border-radius: 100px;
+    padding: 0.45rem 1.1rem; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── SLIDES WRAPPER ── */
+  .slides { position: relative; z-index: 1; }
+
+  /* ── SECTION BASE ── */
+  section {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+  }
+
+  .container { max-width: 1100px; width: 100%; margin: 0 auto; }
+
+  /* ── HERO ── */
+  #hero { text-align: center; }
+  .event-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.3);
+    border-radius: 100px; padding: 0.4rem 1rem;
+    font-size: 0.78rem; font-weight: 600; color: var(--gem);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .event-tag::before {
+    content: '◆'; font-size: 0.6rem;
+    animation: pulse 1.5s ease infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero-title .line2 {
+    background: linear-gradient(135deg, var(--gem), var(--gem2), var(--gem3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem; color: var(--muted); max-width: 560px; margin: 0 auto 2.5rem;
+    line-height: 1.7; animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gem), var(--gem2));
+    color: white; border: none; border-radius: 8px;
+    padding: 0.85rem 2rem; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(79,142,247,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79,142,247,0.4); }
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.85rem 2rem; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--gem); background: rgba(79,142,247,0.05); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; justify-content: center; margin-top: 4rem;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--gem), var(--gem3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .stat-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── WHAT IS A GEM ── */
+  #que-es { background: var(--surface); }
+  .section-label {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gem3); margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1.5rem; line-height: 1.15;
+  }
+  .section-body { color: var(--muted); line-height: 1.8; font-size: 1rem; max-width: 540px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  @media(max-width:768px){ .two-col { grid-template-columns: 1fr; gap: 2rem; } }
+
+  .gem-anatomy {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem; position: relative; overflow: hidden;
+  }
+  .gem-anatomy::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 60% 40%, rgba(79,142,247,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .anatomy-title {
+    font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700;
+    color: var(--gem); margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .anatomy-item {
+    display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .anatomy-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .anatomy-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--gem), var(--gem2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; flex-shrink: 0;
+  }
+  .anatomy-text h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .anatomy-text p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── PASOS ── */
+  #pasos { }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .step-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.5rem; position: relative; overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .step-card:hover { border-color: var(--gem); transform: translateY(-4px); }
+  .step-num {
+    font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800;
+    color: rgba(79,142,247,0.12); position: absolute; top: -0.5rem; right: 0.75rem;
+    line-height: 1;
+  }
+  .step-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .step-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .step-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .step-tip {
+    margin-top: 0.75rem; background: rgba(79,142,247,0.08); border-left: 2px solid var(--gem);
+    padding: 0.5rem 0.75rem; border-radius: 0 6px 6px 0; font-size: 0.78rem; color: var(--gem);
+  }
+
+  /* ── FACULTADES / VOTACION ── */
+  #facultades { background: var(--surface); }
+  .vote-intro {
+    text-align: center; margin-bottom: 3rem;
+  }
+  .vote-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(247,201,72,0.1); border: 1px solid rgba(247,201,72,0.3);
+    border-radius: 100px; padding: 0.4rem 1rem;
+    font-size: 0.78rem; font-weight: 700; color: var(--accent);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem;
+  }
+
+  .fac-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.25rem; }
+  .fac-card {
+    border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.5rem; cursor: pointer; position: relative; overflow: hidden;
+    transition: all 0.3s; background: var(--bg);
+  }
+  .fac-card::after {
+    content: ''; position: absolute; inset: 0; opacity: 0;
+    background: linear-gradient(135deg, var(--gem), var(--gem2));
+    transition: opacity 0.3s; z-index: 0; border-radius: 14px;
+  }
+  .fac-card:hover { transform: translateY(-4px); border-color: transparent; }
+  .fac-card:hover::after { opacity: 0.08; }
+  .fac-card > * { position: relative; z-index: 1; }
+
+  .fac-emoji { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
+  .fac-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .fac-gem-name { font-size: 0.8rem; color: var(--gem); font-weight: 600; margin-bottom: 0.5rem; }
+  .fac-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .fac-tag {
+    display: inline-block; margin-top: 0.75rem;
+    background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 100px; padding: 0.25rem 0.7rem; font-size: 0.72rem; color: var(--gem); font-weight: 600;
+  }
+  .fac-card.selected {
+    border-color: var(--gem); background: rgba(79,142,247,0.05);
+  }
+  .fac-card.selected::after { opacity: 0.12; }
+  .vote-count {
+    position: absolute; top: 0.75rem; right: 0.75rem;
+    background: var(--accent); color: #0a0e1a; border-radius: 100px;
+    padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 800;
+    display: none;
+  }
+  .fac-card.has-votes .vote-count { display: block; }
+
+  .vote-actions { text-align: center; margin-top: 2.5rem; }
+  .vote-result {
+    margin-top: 2rem; padding: 1.5rem;
+    background: rgba(0,229,195,0.05); border: 1px solid rgba(0,229,195,0.2);
+    border-radius: 12px; text-align: center; display: none;
+  }
+  .vote-result.show { display: block; }
+  .vote-winner { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--gem3); }
+
+  /* ── GEM DETAIL (expandible) ── */
+  #gem-detail { min-height: auto; padding: 2rem; display: none; }
+  #gem-detail.show { display: flex; }
+  .gem-detail-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 2.5rem; width: 100%;
+  }
+  .gdh { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .gdh-emoji { font-size: 3rem; }
+  .gdh-info h2 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; }
+  .gdh-info p { color: var(--muted); font-size: 0.9rem; margin-top: 0.25rem; }
+  .gd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  @media(max-width:680px){ .gd-grid { grid-template-columns: 1fr; } }
+  .gd-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+  .gd-block h4 { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--gem); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .gd-block p, .gd-block li { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+  .gd-block ul { padding-left: 1rem; }
+  .prompt-box {
+    background: #0d1117; border: 1px solid rgba(79,142,247,0.2); border-radius: 10px;
+    padding: 1rem; margin-top: 0.5rem;
+    font-family: 'Courier New', monospace; font-size: 0.8rem; color: #a8d8ea;
+    line-height: 1.6; white-space: pre-wrap; word-break: break-word;
+  }
+  .copy-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    margin-top: 0.75rem; background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.3);
+    color: var(--gem); border-radius: 6px; padding: 0.4rem 0.9rem; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+  }
+  .copy-btn:hover { background: rgba(79,142,247,0.2); }
+
+  /* ── GUIA RAPIDA ── */
+  #guia { }
+  .guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+  .guide-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem;
+  }
+  .guide-num {
+    font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 800;
+    color: var(--gem3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+  }
+  .guide-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .guide-text { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 2rem 2.5rem; text-align: center;
+    font-size: 0.82rem; color: var(--muted); position: relative; z-index: 1;
+  }
+  footer a { color: var(--gem); text-decoration: none; }
+  footer strong { color: var(--text); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
+    background: linear-gradient(90deg, var(--gem), var(--gem3));
+    transition: width 0.2s;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .divider {
+    width: 60px; height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--gem), var(--gem2));
+    margin: 1rem 0 2rem;
+  }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .tab-btn {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--muted);
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .tab-btn.active { background: rgba(79,142,247,0.1); border-color: var(--gem); color: var(--gem); }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    background: rgba(0,229,195,0.05); border: 1px solid rgba(0,229,195,0.2);
+    border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1.5rem;
+  }
+  .highlight-box p { font-size: 0.88rem; color: var(--gem3); line-height: 1.6; }
+  .highlight-box strong { color: var(--text); }
+
+  /* ── SMOOTH SCROLL ── */
+  html { scroll-behavior: smooth; }
+
+  /* ── RESPONSIVE NAV ── */
+  @media(max-width:600px) {
+    nav { padding: 0.75rem 1.25rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<nav>
+  <div class="nav-logo">Aulas<span>.</span>Inteligentes</div>
+  <div class="nav-links">
+    <a href="#que-es">¿Qué es?</a>
+    <a href="#pasos">Cómo crear</a>
+    <a href="#facultades">Elige tu Gem</a>
+    <a href="#guia">Guía rápida</a>
+  </div>
+  <button class="nav-pill" onclick="scrollToVote()">🗳️ Votar ahora</button>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero">
+  <div class="container">
+    <div class="event-tag">Evento Areandina · Mayo 2026</div>
+    <h1 class="hero-title">
+      Crea tu<br>
+      <span class="line2">Gem con Gemini</span>
+    </h1>
+    <p class="hero-sub">
+      Aprende a construir tu propio asistente de IA personalizado en Gemini,
+      pensado exactamente para tu área y tus estudiantes.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('que-es').scrollIntoView()">Comenzar →</button>
+      <button class="btn-ghost" onclick="scrollToVote()">Ver los 8 Gems</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">Áreas / Facultades</div></div>
+      <div class="stat"><div class="stat-num">1</div><div class="stat-label">Gem en vivo hoy</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Posibilidades</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ QUÉ ES UN GEM ══════════════ -->
+<section id="que-es">
+  <div class="container">
+    <div class="two-col">
+      <div>
+        <div class="section-label">Conceptos clave</div>
+        <h2 class="section-title">¿Qué es<br>un Gem?</h2>
+        <div class="divider"></div>
+        <p class="section-body">
+          Un <strong>Gem</strong> es un asistente de IA personalizado dentro de Gemini. Tú defines su nombre, su rol, sus instrucciones y los documentos de referencia que debe usar. Una vez guardado, cualquier docente o estudiante puede chatear con él como si fuera un experto especializado en el tema que tú elegiste.
+        </p>
+        <p class="section-body" style="margin-top:1rem;">
+          No se necesita programar. Solo escribir. Y una vez publicado, está disponible para toda tu comunidad.
+        </p>
+        <div class="highlight-box">
+          <p>💡 <strong>Clave del taller:</strong> al final de la sesión, el Gem más votado se construye en vivo. Todos los demás quedan disponibles en GitHub para que los explores después.</p>
+        </div>
+      </div>
+      <div class="gem-anatomy">
+        <div class="anatomy-title">Anatomía de un Gem</div>
+        <div class="anatomy-item">
+          <div class="anatomy-icon">📛</div>
+          <div class="anatomy-text">
+            <h4>Nombre</h4>
+            <p>Identidad del asistente. Debe ser claro y evocador (ej. MentorMind, LexBot).</p>
+          </div>
+        </div>
+        <div class="anatomy-item">
+          <div class="anatomy-icon">📝</div>
+          <div class="anatomy-text">
+            <h4>Descripción</h4>
+            <p>Resumen breve de qué hace. Ayuda a otros a entender su propósito.</p>
+          </div>
+        </div>
+        <div class="anatomy-item">
+          <div class="anatomy-icon">⚙️</div>
+          <div class="anatomy-text">
+            <h4>Instrucciones</h4>
+            <p>El corazón del Gem. Aquí defines su tono, rol, restricciones y forma de responder.</p>
+          </div>
+        </div>
+        <div class="anatomy-item">
+          <div class="anatomy-icon">📚</div>
+          <div class="anatomy-text">
+            <h4>Conocimientos</h4>
+            <p>Archivos PDF, DOCX o TXT que el Gem usará como fuente de referencia.</p>
+          </div>
+        </div>
+        <div class="anatomy-item">
+          <div class="anatomy-icon">🔧</div>
+          <div class="anatomy-text">
+            <h4>Herramienta predeterminada</h4>
+            <p>Elige entre: sin herramienta, Canvas, Deep Research, Imágenes o Música.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PASOS ══════════════ -->
+<section id="pasos">
+  <div class="container">
+    <div class="section-label">Tutorial</div>
+    <h2 class="section-title">Cómo crear<br>tu Gem paso a paso</h2>
+    <div class="divider"></div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">🌐</div>
+        <div class="step-title">Ir a Gemini</div>
+        <div class="step-desc">Accede a <strong>gemini.google.com</strong> con tu cuenta institucional o personal de Google.</div>
+        <div class="step-tip">Asegúrate de estar en la cuenta correcta</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">💎</div>
+        <div class="step-title">Crear Gem</div>
+        <div class="step-desc">En el menú lateral, busca <strong>"Mis Gems"</strong> y haz clic en <strong>"+ Nuevo Gem"</strong>.</div>
+        <div class="step-tip">gemini.google.com/gems/create</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">✏️</div>
+        <div class="step-title">Nombre y descripción</div>
+        <div class="step-desc">Dale un nombre memorable y una descripción breve que explique para qué sirve tu asistente.</div>
+        <div class="step-tip">Sé específico: "Asesor de Casos Clínicos Odontología"</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-icon">📋</div>
+        <div class="step-title">Escribir instrucciones</div>
+        <div class="step-desc">Define el rol, el tono, las restricciones y el tipo de respuestas que debe dar tu Gem.</div>
+        <div class="step-tip">Empieza con: "Eres un asistente especializado en..."</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">05</div>
+        <div class="step-icon">📁</div>
+        <div class="step-title">Subir conocimientos</div>
+        <div class="step-desc">Carga PDFs, guías, rúbricas, normas o cualquier documento que quieras que el Gem conozca.</div>
+        <div class="step-tip">Hasta 10 archivos · Hasta 1M tokens de contexto</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">06</div>
+        <div class="step-icon">🧪</div>
+        <div class="step-title">Probar y guardar</div>
+        <div class="step-desc">Usa el panel de <strong>Vista previa</strong> para probarlo antes de guardarlo. Ajusta hasta que responda bien.</div>
+        <div class="step-tip">Haz al menos 3 preguntas de prueba</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FACULTADES / VOTACIÓN ══════════════ -->
+<section id="facultades">
+  <div class="container">
+    <div class="vote-intro">
+      <div class="vote-badge">🗳️ Votación en vivo</div>
+      <h2 class="section-title">¿Cuál Gem construimos hoy?</h2>
+      <p style="color:var(--muted); font-size:0.95rem; max-width:560px; margin:0 auto;">
+        Hay un Gem diseñado para cada facultad de Areandina. Haz clic en el que más te interese.
+        El más votado lo construimos juntos en tiempo real.
+      </p>
+    </div>
+
+    <div class="fac-grid" id="facGrid">
+      <!-- Cards generadas por JS -->
+    </div>
+
+    <div class="vote-actions">
+      <button class="btn-primary" onclick="showWinner()">Ver Gem más votado ✨</button>
+    </div>
+
+    <div class="vote-result" id="voteResult">
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.08em;">Construiremos en vivo →</div>
+      <div class="vote-winner" id="winnerName"></div>
+      <div id="winnerDesc" style="color:var(--muted);font-size:0.9rem;margin-top:0.5rem;"></div>
+      <button class="btn-primary" style="margin-top:1.5rem;" onclick="scrollToDetail()">Ver instrucciones completas →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ GEM DETAIL ══════════════ -->
+<section id="gem-detail">
+  <div class="container">
+    <div class="gem-detail-card" id="gemDetailCard">
+      <!-- Contenido dinámico -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ GUÍA RÁPIDA ══════════════ -->
+<section id="guia">
+  <div class="container">
+    <div class="section-label">Para llevarte a casa</div>
+    <h2 class="section-title">Guía rápida del<br>buen Gem</h2>
+    <div class="divider"></div>
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="guide-num">Tip 01</div>
+        <div class="guide-title">Rol claro y específico</div>
+        <div class="guide-text">Empieza siempre con: "Eres [rol] con experiencia en [área]. Tu objetivo es [propósito]." Cuanto más específico, mejor.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">Tip 02</div>
+        <div class="guide-title">Define qué NO hacer</div>
+        <div class="guide-text">Incluye restricciones explícitas: "No respondas temas ajenos a [área]", "No inventes cifras", "Si no sabes, dilo claramente".</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">Tip 03</div>
+        <div class="guide-title">Tono y audiencia</div>
+        <div class="guide-text">Especifica si habla con estudiantes de primer semestre, docentes, investigadores o profesionales. El tono cambia mucho según eso.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">Tip 04</div>
+        <div class="guide-title">Sube tus documentos</div>
+        <div class="guide-text">Un Gem con tus propios PDFs (guías, rúbricas, normativas) es 10× más útil que uno sin archivos. El contexto lo es todo.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">Tip 05</div>
+        <div class="guide-title">Prueba con casos reales</div>
+        <div class="guide-text">Pregúntale lo mismo que le preguntarían tus estudiantes. Si falla, ajusta las instrucciones. Iterar es normal y necesario.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">Tip 06</div>
+        <div class="guide-title">Herramienta adecuada</div>
+        <div class="guide-text">Usa "Deep Research" para análisis bibliográfico, "Canvas" para redacción colaborativa, "Imágenes" para diseño y comunicación visual.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">Tip 07</div>
+        <div class="guide-title">Compártelo</div>
+        <div class="guide-text">Los Gems creados con cuenta personal de Google se pueden compartir con otros. Pueden copiarlo, usarlo o adaptarlo.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">Tip 08</div>
+        <div class="guide-title">Revísalo periódicamente</div>
+        <div class="guide-text">Los modelos mejoran, tus necesidades cambian. Revisa y actualiza tus instrucciones cada semestre para mantenerlo al día.</div>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-top:2rem;">
+      <p>📌 <strong>Todos los Gems de esta sesión</strong> están documentados en GitHub con sus instrucciones completas. Puedes acceder, copiar el prompt y crear el tuyo en menos de 10 minutos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <p><strong>Aulas Inteligentes · Creación de Gems con Gemini</strong> · Areandina Pereira 2026</p>
+  <p style="margin-top:0.4rem;">Presentación disponible en <a href="#" id="githubLink">GitHub · REKOL08</a> · Contacto: <a href="mailto:alabrada3@areandina.edu.co">alabrada3@areandina.edu.co</a></p>
+</footer>
+
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
+<script>
+// ─── DATOS DE LAS 8 FACULTADES ───
+const facultades = [
+  {
+    id: "salud",
+    emoji: "🩺",
+    facultad: "Ciencias de la Salud",
+    gemName: "ClinicAI",
+    desc: "Asistente para análisis de casos clínicos, protocolos y apoyo diagnóstico educativo.",
+    tag: "Medicina · Enfermería · Odontología",
+    instrucciones: `Eres ClinicAI, un asistente educativo especializado en ciencias de la salud, diseñado para estudiantes y docentes de programas como Medicina, Enfermería y Odontología de Areandina.
+
+Tu objetivo es apoyar el aprendizaje clínico mediante:
+- Análisis guiado de casos clínicos (sin reemplazar diagnóstico médico real)
+- Explicación de patologías, procedimientos y terminología médica
+- Repaso de protocolos de atención y normas éticas en salud
+- Preparación para exámenes clínicos y OSCE
+
+Tono: académico pero accesible. Hablas con estudiantes universitarios.
+
+RESTRICCIONES IMPORTANTES:
+- Nunca emitas diagnósticos médicos definitivos ni prescripciones
+- Siempre aclara que tus respuestas son con fines educativos
+- Si el caso parece urgencia real, remite a profesionales
+- Cita fuentes cuando menciones evidencia clínica`,
+    docs: ["Guías AIEPI", "Protocolos MinSalud", "Rúbricas OSCE de la facultad"],
+    herramienta: "Sin herramienta predeterminada",
+    preguntas: [
+      "Paciente de 45 años con fiebre, tos seca y saturación del 92%. ¿Cómo lo abordamos?",
+      "¿Cuáles son los criterios de Ranson para pancreatitis aguda?",
+      "Explícame el protocolo de lavado de manos según OMS"
+    ]
+  },
+  {
+    id: "ingenieria",
+    emoji: "⚙️",
+    facultad: "Ingeniería, Diseño y Arq.",
+    gemName: "DesignBot Pro",
+    desc: "Co-piloto para diseño técnico, resolución de problemas de ingeniería y retroalimentación de proyectos.",
+    tag: "Sistemas · Civil · Diseño · Arquitectura",
+    instrucciones: `Eres DesignBot Pro, un asistente técnico-creativo para docentes y estudiantes de Ingeniería, Diseño Industrial y Arquitectura de Areandina.
+
+Tu objetivo es:
+- Revisar y retroalimentar proyectos técnicos y de diseño
+- Explicar conceptos de estructuras, materiales, programación y diseño de sistemas
+- Guiar en metodologías de diseño (Design Thinking, Agile, BIM)
+- Apoyar la redacción de informes técnicos y memorias de proyecto
+
+Tono: técnico-creativo, directo, orientado a soluciones.
+
+RESTRICCIONES:
+- No generes código completo para tareas académicas a entregar (sí ejemplos pedagógicos)
+- Si el estudiante pide que hagas su trabajo completo, oriéntalo pero no lo hagas
+- En arquitectura, recuerda siempre las normas NSR-10 para Colombia`,
+    docs: ["NSR-10 resumen", "Norma Técnica Colombiana NTC", "Rúbricas de proyecto"],
+    herramienta: "Canvas (para sketches y documentos de diseño)",
+    preguntas: [
+      "¿Cuál es la diferencia entre una viga en voladizo y una simplemente apoyada?",
+      "Revisa esta memoria de proyecto de diseño y dime qué le falta",
+      "¿Qué metodología me recomiendas para mi proyecto de grado en sistemas?"
+    ]
+  },
+  {
+    id: "negocios",
+    emoji: "💼",
+    facultad: "Ciencias Empresariales",
+    gemName: "BizAdvisor",
+    desc: "Tutor de negocios, análisis financiero, emprendimiento y gestión empresarial.",
+    tag: "Administración · Contaduría · Mercadeo",
+    instrucciones: `Eres BizAdvisor, un asesor académico en ciencias empresariales para estudiantes y docentes de Administración de Empresas, Contaduría Pública y Mercadeo de Areandina.
+
+Tu rol es:
+- Explicar conceptos de finanzas, contabilidad, marketing y gestión estratégica
+- Guiar el análisis de casos empresariales (DOFA, Canvas, análisis financiero)
+- Apoyar la formulación de planes de negocio y proyectos de emprendimiento
+- Preparar para simulaciones de negocios y concursos de emprendimiento
+
+Tono: profesional, orientado a resultados, con lenguaje del mundo empresarial colombiano.
+
+RESTRICCIONES:
+- No elabores planes de negocio completos para entregar; guía el proceso
+- Cuando menciones cifras fiscales, advierte que las normas cambian y recomienda verificar en DIAN
+- Diferencia siempre entre NIIF y PCGA cuando sea relevante`,
+    docs: ["Plan de negocios Areandina template", "NIIF para PYMES resumen", "Modelo Canvas guía"],
+    herramienta: "Deep Research (para análisis de mercado)",
+    preguntas: [
+      "¿Cómo calculo el punto de equilibrio de mi empresa?",
+      "Ayúdame a construir la propuesta de valor en mi Canvas",
+      "¿Cuáles son las diferencias entre Liderazgo Transaccional y Transformacional?"
+    ]
+  },
+  {
+    id: "educacion",
+    emoji: "🎓",
+    facultad: "Ciencias de la Educación",
+    gemName: "PedagoGem",
+    desc: "Asistente pedagógico para diseño curricular, estrategias didácticas y evaluación formativa.",
+    tag: "Licenciaturas · Educación virtual · Pedagogía",
+    instrucciones: `Eres PedagoGem, un asistente especializado en pedagogía y diseño instruccional para docentes y estudiantes de ciencias de la educación de Areandina.
+
+Tu misión es:
+- Apoyar el diseño de secuencias didácticas, planes de clase y rúbricas
+- Sugerir estrategias pedagógicas activas (ABP, aula invertida, gamificación)
+- Explicar teorías del aprendizaje (Vygotsky, Piaget, Ausubel, Bloom)
+- Guiar en la integración de TIC y IA en el aula de forma ética y reflexiva
+
+Tono: cálido, reflexivo, basado en evidencia pedagógica.
+
+RESTRICCIONES:
+- No diseñes evaluaciones completas para entregar sin guiar el proceso de reflexión
+- Siempre contextualiza las estrategias al sistema educativo colombiano (MEN)
+- Promueve el pensamiento crítico en vez de dar respuestas cerradas`,
+    docs: ["Lineamientos curriculares MEN", "Taxonomía de Bloom actualizada", "Modelo pedagógico Areandina"],
+    herramienta: "Sin herramienta predeterminada",
+    preguntas: [
+      "Diseña una secuencia didáctica para enseñar fracciones a grado quinto",
+      "¿Cuál es la diferencia entre evaluación formativa y sumativa?",
+      "¿Cómo puedo integrar Gemini en mi clase sin que los estudiantes hagan trampa?"
+    ]
+  },
+  {
+    id: "derecho",
+    emoji: "⚖️",
+    facultad: "Ciencias Jurídicas y Políticas",
+    gemName: "LexAI",
+    desc: "Asesor jurídico educativo para estudio de jurisprudencia, normas y análisis de casos legales.",
+    tag: "Derecho · Ciencia Política · Criminología",
+    instrucciones: `Eres LexAI, un asistente jurídico educativo para estudiantes y docentes de Derecho y Ciencias Políticas de Areandina.
+
+Tu función es:
+- Explicar normas, leyes y jurisprudencia colombiana (Constitución, Códigos, Cortes)
+- Apoyar el análisis de casos jurídicos con estructura IRAC (Issue, Rule, Application, Conclusion)
+- Guiar en la redacción de demandas, tutelas, derechos de petición y conceptos jurídicos
+- Preparar para audiencias simuladas y debates académicos legales
+
+Tono: riguroso, preciso, con citas normativas cuando sea posible.
+
+RESTRICCIONES CRÍTICAS:
+- Siempre aclara que NO eres un abogado y que tus respuestas son educativas
+- Nunca asesorates en litigios reales sin supervisión profesional
+- Cuando la norma sea reciente, advierte verificar en el Diario Oficial
+- Diferencia claramente entre legislación vigente y jurisprudencia`,
+    docs: ["Constitución Política de Colombia", "Código General del Proceso", "Código Civil colombiano"],
+    herramienta: "Deep Research",
+    preguntas: [
+      "¿Cuáles son los elementos de la responsabilidad civil extracontractual en Colombia?",
+      "¿Procede acción de tutela contra particulares? Dame jurisprudencia",
+      "Analiza este caso bajo la estructura IRAC: [describe tu caso]"
+    ]
+  },
+  {
+    id: "comunicacion",
+    emoji: "📡",
+    facultad: "Comunicación y Humanidades",
+    gemName: "NarrAI",
+    desc: "Asistente creativo para escritura, análisis de medios, guion y comunicación estratégica.",
+    tag: "Comunicación · Humanidades · Publicidad",
+    instrucciones: `Eres NarrAI, un asistente creativo-analítico para estudiantes y docentes de Comunicación Social, Publicidad y Humanidades de Areandina.
+
+Tu misión es:
+- Apoyar la escritura creativa, periodística y académica
+- Analizar textos, discursos, campañas publicitarias y productos mediáticos
+- Guiar en la construcción de narrativas transmedia y storytelling
+- Asistir en guionización, diseño de contenidos y comunicación estratégica
+
+Tono: creativo, analítico, con sensibilidad cultural y ética comunicativa.
+
+RESTRICCIONES:
+- No escribas trabajos académicos completos; co-crea y guía
+- Promueve el pensamiento crítico sobre los medios y la desinformación
+- Cita fuentes cuando analices teorías comunicativas (McLuhan, Foucault, etc.)`,
+    docs: ["Manual de estilo Areandina", "Código de ética periodística colombiana", "Guía de narrativas digitales"],
+    herramienta: "Canvas (para redacción y guiones)",
+    preguntas: [
+      "Analiza la campaña publicitaria de [marca] usando el modelo AIDA",
+      "¿Cuál es la diferencia entre periodismo narrativo y crónica literaria?",
+      "Ayúdame a construir el arco narrativo de mi cortometraje"
+    ]
+  },
+  {
+    id: "arte",
+    emoji: "🎨",
+    facultad: "Arte y Diseño",
+    gemName: "CreatIA",
+    desc: "Co-creador visual para proyectos artísticos, crítica de arte y conceptualización de diseño.",
+    tag: "Artes Visuales · Diseño Gráfico · Fotografía",
+    instrucciones: `Eres CreatIA, un asistente creativo especializado en artes visuales y diseño gráfico para estudiantes y docentes de Areandina.
+
+Tu rol es:
+- Retroalimentar conceptualmente proyectos artísticos y de diseño
+- Explicar movimientos artísticos, teoría del color, composición y tipografía
+- Guiar la conceptualización de proyectos de diseño (brief, concepto, moodboard)
+- Apoyar la crítica constructiva de portafolios y obras
+
+Tono: sensible, evocador, analítico. Hablas el lenguaje del arte y el diseño.
+
+RESTRICCIONES:
+- No juzgues el valor artístico de forma definitiva; el arte es subjetivo
+- Cuando generes prompts para imágenes, sé descriptivo y específico
+- Promueve la originalidad y la voz propia del estudiante`,
+    docs: ["Historia del arte contemporáneo", "Guía de branding Areandina", "Teoría del color - Itten"],
+    herramienta: "Imágenes (generación visual con Imagen 3)",
+    preguntas: [
+      "¿Cómo le explico el concepto de 'espacio negativo' a un estudiante de primer semestre?",
+      "Dame feedback de esta propuesta de identidad visual para una marca de café artesanal",
+      "¿Cuáles son las diferencias entre diseño editorial y diseño editorial digital?"
+    ]
+  },
+  {
+    id: "virtual",
+    emoji: "💻",
+    facultad: "Modalidad Virtual / Distancia",
+    gemName: "TutorVirtual",
+    desc: "Acompañante académico 24/7 para estudiantes virtuales: guía de aprendizaje autónomo, gestión del tiempo y resolución de dudas.",
+    tag: "Todos los programas en modalidad virtual",
+    instrucciones: `Eres TutorVirtual, un asistente de acompañamiento académico para estudiantes de programas en modalidad virtual y distancia de Areandina.
+
+Tu objetivo es:
+- Ser el primer punto de apoyo académico disponible 24/7
+- Guiar al estudiante en estrategias de aprendizaje autónomo
+- Ayudar a resolver dudas de cualquier área básica (metodología, APA, búsqueda bibliográfica)
+- Orientar sobre los recursos digitales de Areandina (BIDIG, Koha, bases de datos)
+- Apoyar en gestión del tiempo, técnicas de estudio y manejo del estrés académico
+
+Tono: empático, motivador, paciente. Muchos estudiantes virtuales estudian solos y de noche.
+
+RESTRICCIONES:
+- No reemplaces a los tutores humanos; remite al tutor real cuando el caso lo requiera
+- No resuelvas evaluaciones ni trabajos; guía el proceso de aprendizaje
+- Si detectas señales de dificultad emocional severa, remite a bienestar universitario`,
+    docs: ["Guía de recursos BIDIG", "Manual del estudiante virtual Areandina", "Normas APA 7 resumen"],
+    herramienta: "Sin herramienta predeterminada",
+    preguntas: [
+      "¿Cómo accedo a las bases de datos de la biblioteca desde casa?",
+      "No entiendo la diferencia entre marco teórico y estado del arte",
+      "Me siento muy estresado con los parciales. ¿Qué me recomiendas?"
+    ]
+  }
+];
+
+// ─── RENDERIZAR CARDS DE FACULTADES ───
+const grid = document.getElementById('facGrid');
+const votes = {};
+
+facultades.forEach(f => {
+  votes[f.id] = 0;
+  const card = document.createElement('div');
+  card.className = 'fac-card';
+  card.id = 'card-' + f.id;
+  card.innerHTML = `
+    <div class="vote-count" id="vc-${f.id}">0</div>
+    <span class="fac-emoji">${f.emoji}</span>
+    <div class="fac-name">${f.facultad}</div>
+    <div class="fac-gem-name">💎 ${f.gemName}</div>
+    <div class="fac-desc">${f.desc}</div>
+    <span class="fac-tag">${f.tag}</span>
+  `;
+  card.addEventListener('click', () => vote(f.id));
+  grid.appendChild(card);
+});
+
+function vote(id) {
+  votes[id]++;
+  const card = document.getElementById('card-' + id);
+  const vc = document.getElementById('vc-' + id);
+  card.classList.add('has-votes');
+  vc.textContent = votes[id];
+  // highlight selected
+  document.querySelectorAll('.fac-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+}
+
+function showWinner() {
+  let maxVotes = 0;
+  let winnerId = facultades[0].id;
+  for (const [id, count] of Object.entries(votes)) {
+    if (count > maxVotes) { maxVotes = count; winnerId = id; }
+  }
+  // si no hay votos, usa el primero como demo
+  const winner = facultades.find(f => f.id === winnerId);
+  document.getElementById('winnerName').textContent = `${winner.emoji} ${winner.gemName} — ${winner.facultad}`;
+  document.getElementById('winnerDesc').textContent = winner.desc;
+  const res = document.getElementById('voteResult');
+  res.classList.add('show');
+  res.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  renderDetail(winner);
+}
+
+function renderDetail(f) {
+  const section = document.getElementById('gem-detail');
+  section.classList.add('show');
+  const card = document.getElementById('gemDetailCard');
+  card.innerHTML = `
+    <div class="gdh">
+      <div class="gdh-emoji">${f.emoji}</div>
+      <div class="gdh-info">
+        <h2>${f.gemName}</h2>
+        <p>${f.facultad} · ${f.tag}</p>
+      </div>
+    </div>
+    <div class="gd-grid">
+      <div class="gd-block">
+        <h4>📋 Instrucciones completas</h4>
+        <div class="prompt-box" id="promptBox-${f.id}">${f.instrucciones}</div>
+        <button class="copy-btn" onclick="copyPrompt('${f.id}')">📋 Copiar prompt</button>
+      </div>
+      <div>
+        <div class="gd-block" style="margin-bottom:1rem;">
+          <h4>📚 Documentos sugeridos</h4>
+          <ul>${f.docs.map(d => `<li>${d}</li>`).join('')}</ul>
+        </div>
+        <div class="gd-block" style="margin-bottom:1rem;">
+          <h4>🔧 Herramienta recomendada</h4>
+          <p>${f.herramienta}</p>
+        </div>
+        <div class="gd-block">
+          <h4>💬 Preguntas de prueba</h4>
+          <ul>${f.preguntas.map(p => `<li style="margin-bottom:0.4rem;">${p}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function copyPrompt(id) {
+  const f = facultades.find(f => f.id === id);
+  navigator.clipboard.writeText(f.instrucciones).then(() => {
+    const btn = document.querySelector(`button[onclick="copyPrompt('${id}')"]`);
+    btn.textContent = '✅ ¡Copiado!';
+    setTimeout(() => btn.innerHTML = '📋 Copiar prompt', 2000);
+  });
+}
+
+function scrollToVote() {
+  document.getElementById('facultades').scrollIntoView({ behavior: 'smooth' });
+}
+
+function scrollToDetail() {
+  document.getElementById('gem-detail').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─── PROGRESS BAR ───
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.body.scrollHeight - window.innerHeight;
+  const pct = (scrollTop / docHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+</script>
+</body>
+</html>
